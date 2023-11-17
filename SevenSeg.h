@@ -87,14 +87,14 @@ class SevenSeg
   private:
 
     // The pins for each of the seven segments (eight with decimal point)
-    int _A;
-    int _B;
-    int _C;
-    int _D;
-    int _E;
-    int _F;
-    int _G;
-    int _DP;	// -1 when decimal point not assigned
+    int _SEG_A;
+    int _SEG_B;
+    int _SEG_C;
+    int _SEG_D;
+    int _SEG_E;
+    int _SEG_F;
+    int _SEG_G;
+    int _SEG_DP;	// -1 when decimal point not assigned
 
     // Variables used for colon and apostrophe symbols
     int _colonState;	// Whether colon is on (_segOn) or off (_segOff).

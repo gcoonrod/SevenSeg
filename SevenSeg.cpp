@@ -30,23 +30,23 @@ SevenSeg::SevenSeg(int A,int B,int C,int D,int E,int F,int G){
   setCommonAnode();
 
   // Set segment pins
-  _A=A;
-  _B=B;
-  _C=C;
-  _D=D;
-  _E=E;
-  _F=F;
-  _G=G;
-  _DP=-1;	// DP initially not assigned
+  _SEG_A=A;
+  _SEG_B=B;
+  _SEG_C=C;
+  _SEG_D=D;
+  _SEG_E=E;
+  _SEG_F=F;
+  _SEG_G=G;
+  _SEG_DP=-1;	// DP initially not assigned
 
   // Set all segment pins as outputs
-  pinMode(_A, OUTPUT);
-  pinMode(_B, OUTPUT);
-  pinMode(_C, OUTPUT);
-  pinMode(_D, OUTPUT);
-  pinMode(_E, OUTPUT);
-  pinMode(_F, OUTPUT);
-  pinMode(_G, OUTPUT);
+  pinMode(_SEG_A, OUTPUT);
+  pinMode(_SEG_B, OUTPUT);
+  pinMode(_SEG_C, OUTPUT);
+  pinMode(_SEG_D, OUTPUT);
+  pinMode(_SEG_E, OUTPUT);
+  pinMode(_SEG_F, OUTPUT);
+  pinMode(_SEG_G, OUTPUT);
 
   // Assume no digit pins are used (i.e. it's only one hardwired digit)
   _numOfDigits=0;
@@ -101,16 +101,16 @@ void SevenSeg::clearDisp(){
   for(int i=0;i<_numOfDigits;i++){
     digitalWrite(_dig[i], _digOff);
   }
-  digitalWrite(_A, _segOff);
-  digitalWrite(_B, _segOff);
-  digitalWrite(_C, _segOff);
-  digitalWrite(_D, _segOff);
-  digitalWrite(_E, _segOff);
-  digitalWrite(_F, _segOff);
-  digitalWrite(_G, _segOff);
+  digitalWrite(_SEG_A, _segOff);
+  digitalWrite(_SEG_B, _segOff);
+  digitalWrite(_SEG_C, _segOff);
+  digitalWrite(_SEG_D, _segOff);
+  digitalWrite(_SEG_E, _segOff);
+  digitalWrite(_SEG_F, _segOff);
+  digitalWrite(_SEG_G, _segOff);
 
-  if(_DP!=-1){	// Clear DP too if assigned
-    digitalWrite(_DP, _segOff);
+  if(_SEG_DP!=-1){	// Clear DP too if assigned
+    digitalWrite(_SEG_DP, _segOff);
   }
 
   if(_symbDigPin!=-1){
@@ -248,7 +248,7 @@ void SevenSeg::writeClock(int mm, int ss){
 
   if(_colonSegPin!=-1){
     writeClock(mm,ss,':');
-  } else if(_DP!=-1){
+  } else if(_SEG_DP!=-1){
     writeClock(mm,ss,'.');
   } else {
     writeClock(mm,ss,'_');
@@ -575,13 +575,13 @@ void SevenSeg::updDelay(){
 
   if(_timerID!=-1){
     // Artefacts in duty cycle control appeared when these values changed while interrupts happening (A kind of stepping in brightness appeared)
-    cli();
+    noInterrupts();
     _timerCounterOnEnd=(_digitOnDelay/16)-1;
     _timerCounterOffEnd=(_digitOffDelay/16)-1;
     if(_digitOnDelay==0) _timerCounterOnEnd=0;
     if(_digitOffDelay==0) _timerCounterOffEnd=0;
 //    _timerCounter=0;
-    sei();
+    interrupts();
   }
 }
 
@@ -717,20 +717,20 @@ void SevenSeg::changeDigit(char digit){
 
 void SevenSeg::setDPPin(int DPPin){
 
-  _DP=DPPin;
-  pinMode(_DP, OUTPUT);
+  _SEG_DP=DPPin;
+  pinMode(_SEG_DP, OUTPUT);
 
 }
 
 void SevenSeg::setDP(){
 
-  digitalWrite(_DP, _segOn);
+  digitalWrite(_SEG_DP, _segOn);
 
 }
 
 void SevenSeg::clearDP(){
 
-  digitalWrite(_DP, _segOff);
+  digitalWrite(_SEG_DP, _segOff);
 
 }
 /*
@@ -890,91 +890,91 @@ void SevenSeg::clearApos(){
 void SevenSeg::writeDigit(int digit){
 
   // Turn off all LEDs first to avoid running current through too many LEDs at once.
-  digitalWrite(_A, _segOff);
-  digitalWrite(_B, _segOff);
-  digitalWrite(_C, _segOff);
-  digitalWrite(_D, _segOff);
-  digitalWrite(_E, _segOff);
-  digitalWrite(_F, _segOff);
-  digitalWrite(_G, _segOff);
+  digitalWrite(_SEG_A, _segOff);
+  digitalWrite(_SEG_B, _segOff);
+  digitalWrite(_SEG_C, _segOff);
+  digitalWrite(_SEG_D, _segOff);
+  digitalWrite(_SEG_E, _segOff);
+  digitalWrite(_SEG_F, _segOff);
+  digitalWrite(_SEG_G, _segOff);
 
   if(digit==1){
-    digitalWrite(_B, _segOn);
-    digitalWrite(_C, _segOn);
+    digitalWrite(_SEG_B, _segOn);
+    digitalWrite(_SEG_C, _segOn);
   }
 
   if(digit==2){
-    digitalWrite(_A, _segOn);
-    digitalWrite(_B, _segOn);
-    digitalWrite(_G, _segOn);
-    digitalWrite(_E, _segOn);
-    digitalWrite(_D, _segOn);
+    digitalWrite(_SEG_A, _segOn);
+    digitalWrite(_SEG_B, _segOn);
+    digitalWrite(_SEG_G, _segOn);
+    digitalWrite(_SEG_E, _segOn);
+    digitalWrite(_SEG_D, _segOn);
   }
 
   if(digit==3){
-    digitalWrite(_A, _segOn);
-    digitalWrite(_B, _segOn);
-    digitalWrite(_G, _segOn);
-    digitalWrite(_C, _segOn);
-    digitalWrite(_D, _segOn);
+    digitalWrite(_SEG_A, _segOn);
+    digitalWrite(_SEG_B, _segOn);
+    digitalWrite(_SEG_G, _segOn);
+    digitalWrite(_SEG_C, _segOn);
+    digitalWrite(_SEG_D, _segOn);
   }
 
   if(digit==4){
-    digitalWrite(_F, _segOn);
-    digitalWrite(_G, _segOn);
-    digitalWrite(_B, _segOn);
-    digitalWrite(_C, _segOn);
+    digitalWrite(_SEG_F, _segOn);
+    digitalWrite(_SEG_G, _segOn);
+    digitalWrite(_SEG_B, _segOn);
+    digitalWrite(_SEG_C, _segOn);
   }
 
   if(digit==5){
-    digitalWrite(_A, _segOn);
-    digitalWrite(_F, _segOn);
-    digitalWrite(_G, _segOn);
-    digitalWrite(_C, _segOn);
-    digitalWrite(_D, _segOn);
+    digitalWrite(_SEG_A, _segOn);
+    digitalWrite(_SEG_F, _segOn);
+    digitalWrite(_SEG_G, _segOn);
+    digitalWrite(_SEG_C, _segOn);
+    digitalWrite(_SEG_D, _segOn);
   }
 
   if(digit==6){
-    digitalWrite(_A, _segOn);
-    digitalWrite(_F, _segOn);
-    digitalWrite(_E, _segOn);
-    digitalWrite(_D, _segOn);
-    digitalWrite(_C, _segOn);
-    digitalWrite(_G, _segOn);
+    digitalWrite(_SEG_A, _segOn);
+    digitalWrite(_SEG_F, _segOn);
+    digitalWrite(_SEG_E, _segOn);
+    digitalWrite(_SEG_D, _segOn);
+    digitalWrite(_SEG_C, _segOn);
+    digitalWrite(_SEG_G, _segOn);
   }
 
   if(digit==7){
-    digitalWrite(_A, _segOn);
-    digitalWrite(_B, _segOn);
-    digitalWrite(_C, _segOn);
+    digitalWrite(_SEG_A, _segOn);
+    digitalWrite(_SEG_B, _segOn);
+    digitalWrite(_SEG_C, _segOn);
   }
 
   if(digit==8){
-    digitalWrite(_A, _segOn);
-    digitalWrite(_B, _segOn);
-    digitalWrite(_C, _segOn);
-    digitalWrite(_D, _segOn);
-    digitalWrite(_E, _segOn);
-    digitalWrite(_F, _segOn);
-    digitalWrite(_G, _segOn);
+    digitalWrite(_SEG_A, _segOn);
+    digitalWrite(_SEG_B, _segOn);
+    digitalWrite(_SEG_C, _segOn);
+    digitalWrite(_SEG_D, _segOn);
+    digitalWrite(_SEG_E, _segOn);
+    digitalWrite(_SEG_F, _segOn);
+    digitalWrite(_SEG_G, _segOn);
   }
 
   if(digit==9){
-    digitalWrite(_G, _segOn);
-    digitalWrite(_F, _segOn);
-    digitalWrite(_A, _segOn);
-    digitalWrite(_B, _segOn);
-    digitalWrite(_C, _segOn);
-    digitalWrite(_D, _segOn);
+    digitalWrite(_SEG_G, _segOn);
+    digitalWrite(_SEG_F, _segOn);
+    digitalWrite(_SEG_A, _segOn);
+    digitalWrite(_SEG_B, _segOn);
+    digitalWrite(_SEG_C, _segOn);
+    digitalWrite(_SEG_D, _segOn);
   }
 
   if(digit==0){
-    digitalWrite(_A, _segOn);
-    digitalWrite(_B, _segOn);
-    digitalWrite(_C, _segOn);
-    digitalWrite(_D, _segOn);
-    digitalWrite(_E, _segOn);
-    digitalWrite(_F, _segOn);
+    digitalWrite(_SEG_A, _segOn);
+    digitalWrite(_SEG_B, _segOn);
+    digitalWrite(_SEG_C, _segOn);
+    digitalWrite(_SEG_D, _segOn);
+    digitalWrite(_SEG_E, _segOn);
+    digitalWrite(_SEG_F, _segOn);
   }
 
 }
@@ -982,23 +982,23 @@ void SevenSeg::writeDigit(int digit){
 void SevenSeg::writeDigit(char digit){
 
   // Turn off all LEDs first. Run writeDigit(' ') to clear digit.
-  digitalWrite(_A, _segOff);
-  digitalWrite(_B, _segOff);
-  digitalWrite(_C, _segOff);
-  digitalWrite(_D, _segOff);
-  digitalWrite(_E, _segOff);
-  digitalWrite(_F, _segOff);
-  digitalWrite(_G, _segOff);
+  digitalWrite(_SEG_A, _segOff);
+  digitalWrite(_SEG_B, _segOff);
+  digitalWrite(_SEG_C, _segOff);
+  digitalWrite(_SEG_D, _segOff);
+  digitalWrite(_SEG_E, _segOff);
+  digitalWrite(_SEG_F, _segOff);
+  digitalWrite(_SEG_G, _segOff);
 
   if(digit=='-'){
-    digitalWrite(_G, _segOn);
+    digitalWrite(_SEG_G, _segOn);
   }
 
   if(digit=='\370'){ // ASCII code 248 or degree symbol: '°'
-    digitalWrite(_A, _segOn);
-    digitalWrite(_B, _segOn);
-    digitalWrite(_F, _segOn);
-    digitalWrite(_G, _segOn);
+    digitalWrite(_SEG_A, _segOn);
+    digitalWrite(_SEG_B, _segOn);
+    digitalWrite(_SEG_F, _segOn);
+    digitalWrite(_SEG_G, _segOn);
   }
 
   // Digits are numbers. Write with writeDigit(int)
@@ -1008,202 +1008,202 @@ void SevenSeg::writeDigit(char digit){
   if(digit>=97&&digit<=122) digit-=32;
 
   if(digit=='A'){
-    digitalWrite(_A, _segOn);
-    digitalWrite(_B, _segOn);
-    digitalWrite(_C, _segOn);
-    digitalWrite(_E, _segOn);
-    digitalWrite(_F, _segOn);
-    digitalWrite(_G, _segOn);
+    digitalWrite(_SEG_A, _segOn);
+    digitalWrite(_SEG_B, _segOn);
+    digitalWrite(_SEG_C, _segOn);
+    digitalWrite(_SEG_E, _segOn);
+    digitalWrite(_SEG_F, _segOn);
+    digitalWrite(_SEG_G, _segOn);
   }
 
   if(digit=='B'){
-    digitalWrite(_C, _segOn);
-    digitalWrite(_D, _segOn);
-    digitalWrite(_E, _segOn);
-    digitalWrite(_F, _segOn);
-    digitalWrite(_G, _segOn);
+    digitalWrite(_SEG_C, _segOn);
+    digitalWrite(_SEG_D, _segOn);
+    digitalWrite(_SEG_E, _segOn);
+    digitalWrite(_SEG_F, _segOn);
+    digitalWrite(_SEG_G, _segOn);
   }
 
   if(digit=='C'){
-    digitalWrite(_A, _segOn);
-    digitalWrite(_D, _segOn);
-    digitalWrite(_E, _segOn);
-    digitalWrite(_F, _segOn);
+    digitalWrite(_SEG_A, _segOn);
+    digitalWrite(_SEG_D, _segOn);
+    digitalWrite(_SEG_E, _segOn);
+    digitalWrite(_SEG_F, _segOn);
   }
 
   if(digit=='D'){
-    digitalWrite(_B, _segOn);
-    digitalWrite(_C, _segOn);
-    digitalWrite(_D, _segOn);
-    digitalWrite(_E, _segOn);
-    digitalWrite(_G, _segOn);
+    digitalWrite(_SEG_B, _segOn);
+    digitalWrite(_SEG_C, _segOn);
+    digitalWrite(_SEG_D, _segOn);
+    digitalWrite(_SEG_E, _segOn);
+    digitalWrite(_SEG_G, _segOn);
   }
 
   if(digit=='E'){
-    digitalWrite(_A, _segOn);
-    digitalWrite(_D, _segOn);
-    digitalWrite(_E, _segOn);
-    digitalWrite(_F, _segOn);
-    digitalWrite(_G, _segOn);
+    digitalWrite(_SEG_A, _segOn);
+    digitalWrite(_SEG_D, _segOn);
+    digitalWrite(_SEG_E, _segOn);
+    digitalWrite(_SEG_F, _segOn);
+    digitalWrite(_SEG_G, _segOn);
   }
 
   if(digit=='F'){
-    digitalWrite(_A, _segOn);
-    digitalWrite(_E, _segOn);
-    digitalWrite(_F, _segOn);
-    digitalWrite(_G, _segOn);
+    digitalWrite(_SEG_A, _segOn);
+    digitalWrite(_SEG_E, _segOn);
+    digitalWrite(_SEG_F, _segOn);
+    digitalWrite(_SEG_G, _segOn);
   }
 
   if(digit=='G'){
 /*
     digitalWrite(_A, _segOn);
-    digitalWrite(_B, _segOn);
-    digitalWrite(_C, _segOn);
-    digitalWrite(_D, _segOn);
-    digitalWrite(_E, _segOn);
-    digitalWrite(_G, _segOn);
+    digitalWrite(_SEG_B, _segOn);
+    digitalWrite(_SEG_C, _segOn);
+    digitalWrite(_SEG_D, _segOn);
+    digitalWrite(_SEG_E, _segOn);
+    digitalWrite(_SEG_G, _segOn);
     // TBD: Really write G like a 9, when it can be written as almost G?
 */
-    digitalWrite(_A, _segOn);
-    digitalWrite(_C, _segOn);
-    digitalWrite(_D, _segOn);
-    digitalWrite(_E, _segOn);
-    digitalWrite(_F, _segOn);
+    digitalWrite(_SEG_A, _segOn);
+    digitalWrite(_SEG_C, _segOn);
+    digitalWrite(_SEG_D, _segOn);
+    digitalWrite(_SEG_E, _segOn);
+    digitalWrite(_SEG_F, _segOn);
   }
 
   if(digit=='H'){
-    digitalWrite(_B, _segOn);
-    digitalWrite(_C, _segOn);
-    digitalWrite(_E, _segOn);
-    digitalWrite(_F, _segOn);
-    digitalWrite(_G, _segOn);
+    digitalWrite(_SEG_B, _segOn);
+    digitalWrite(_SEG_C, _segOn);
+    digitalWrite(_SEG_E, _segOn);
+    digitalWrite(_SEG_F, _segOn);
+    digitalWrite(_SEG_G, _segOn);
   }
 
   if(digit=='I'){
-    digitalWrite(_E, _segOn);
-    digitalWrite(_F, _segOn);
+    digitalWrite(_SEG_E, _segOn);
+    digitalWrite(_SEG_F, _segOn);
   }
 
   if(digit=='J'){
-    digitalWrite(_B, _segOn);
-    digitalWrite(_C, _segOn);
-    digitalWrite(_D, _segOn);
-    digitalWrite(_E, _segOn);
+    digitalWrite(_SEG_B, _segOn);
+    digitalWrite(_SEG_C, _segOn);
+    digitalWrite(_SEG_D, _segOn);
+    digitalWrite(_SEG_E, _segOn);
   }
 
   if(digit=='K'){
-    digitalWrite(_B, _segOn);
-    digitalWrite(_C, _segOn);
-    digitalWrite(_E, _segOn);
-    digitalWrite(_F, _segOn);
-    digitalWrite(_G, _segOn);
+    digitalWrite(_SEG_B, _segOn);
+    digitalWrite(_SEG_C, _segOn);
+    digitalWrite(_SEG_E, _segOn);
+    digitalWrite(_SEG_F, _segOn);
+    digitalWrite(_SEG_G, _segOn);
   }
 
   if(digit=='L'){
-    digitalWrite(_D, _segOn);
-    digitalWrite(_E, _segOn);
-    digitalWrite(_F, _segOn);
+    digitalWrite(_SEG_D, _segOn);
+    digitalWrite(_SEG_E, _segOn);
+    digitalWrite(_SEG_F, _segOn);
   }
 
   if(digit=='M'){
-    digitalWrite(_A, _segOn);
-    digitalWrite(_C, _segOn);
-    digitalWrite(_E, _segOn);
+    digitalWrite(_SEG_A, _segOn);
+    digitalWrite(_SEG_C, _segOn);
+    digitalWrite(_SEG_E, _segOn);
   }
 
   if(digit=='N'){
-    digitalWrite(_C, _segOn);
-    digitalWrite(_E, _segOn);
-    digitalWrite(_G, _segOn);
+    digitalWrite(_SEG_C, _segOn);
+    digitalWrite(_SEG_E, _segOn);
+    digitalWrite(_SEG_G, _segOn);
   }
 
   if(digit=='O'){
-    digitalWrite(_A, _segOn);
-    digitalWrite(_B, _segOn);
-    digitalWrite(_C, _segOn);
-    digitalWrite(_D, _segOn);
-    digitalWrite(_E, _segOn);
-    digitalWrite(_F, _segOn);
+    digitalWrite(_SEG_A, _segOn);
+    digitalWrite(_SEG_B, _segOn);
+    digitalWrite(_SEG_C, _segOn);
+    digitalWrite(_SEG_D, _segOn);
+    digitalWrite(_SEG_E, _segOn);
+    digitalWrite(_SEG_F, _segOn);
   }
 
   if(digit=='P'){
-    digitalWrite(_A, _segOn);
-    digitalWrite(_B, _segOn);
-    digitalWrite(_E, _segOn);
-    digitalWrite(_F, _segOn);
-    digitalWrite(_G, _segOn);
+    digitalWrite(_SEG_A, _segOn);
+    digitalWrite(_SEG_B, _segOn);
+    digitalWrite(_SEG_E, _segOn);
+    digitalWrite(_SEG_F, _segOn);
+    digitalWrite(_SEG_G, _segOn);
   }
 
   if(digit=='Q'){
-    digitalWrite(_A, _segOn);
-    digitalWrite(_B, _segOn);
-    digitalWrite(_C, _segOn);
-    digitalWrite(_F, _segOn);
-    digitalWrite(_G, _segOn);
+    digitalWrite(_SEG_A, _segOn);
+    digitalWrite(_SEG_B, _segOn);
+    digitalWrite(_SEG_C, _segOn);
+    digitalWrite(_SEG_F, _segOn);
+    digitalWrite(_SEG_G, _segOn);
   }
 
   if(digit=='R'){
-    digitalWrite(_E, _segOn);
-    digitalWrite(_G, _segOn);
+    digitalWrite(_SEG_E, _segOn);
+    digitalWrite(_SEG_G, _segOn);
   }
 
   if(digit=='S'){
-    digitalWrite(_A, _segOn);
-    digitalWrite(_C, _segOn);
-    digitalWrite(_D, _segOn);
-    digitalWrite(_F, _segOn);
-    digitalWrite(_G, _segOn);
+    digitalWrite(_SEG_A, _segOn);
+    digitalWrite(_SEG_C, _segOn);
+    digitalWrite(_SEG_D, _segOn);
+    digitalWrite(_SEG_F, _segOn);
+    digitalWrite(_SEG_G, _segOn);
   }
 
   if(digit=='T'){
-    digitalWrite(_D, _segOn);
-    digitalWrite(_E, _segOn);
-    digitalWrite(_F, _segOn);
-    digitalWrite(_G, _segOn);
+    digitalWrite(_SEG_D, _segOn);
+    digitalWrite(_SEG_E, _segOn);
+    digitalWrite(_SEG_F, _segOn);
+    digitalWrite(_SEG_G, _segOn);
   }
 
  if(digit=='U'){
-    digitalWrite(_B, _segOn);
-    digitalWrite(_C, _segOn);
-    digitalWrite(_D, _segOn);
-    digitalWrite(_E, _segOn);
-    digitalWrite(_F, _segOn);
+    digitalWrite(_SEG_B, _segOn);
+    digitalWrite(_SEG_C, _segOn);
+    digitalWrite(_SEG_D, _segOn);
+    digitalWrite(_SEG_E, _segOn);
+    digitalWrite(_SEG_F, _segOn);
   }
 
   if(digit=='V'){
-    digitalWrite(_C, _segOn);
-    digitalWrite(_D, _segOn);
-    digitalWrite(_E, _segOn);
+    digitalWrite(_SEG_C, _segOn);
+    digitalWrite(_SEG_D, _segOn);
+    digitalWrite(_SEG_E, _segOn);
   }
 
   if(digit=='W'){
-    digitalWrite(_B, _segOn);
-    digitalWrite(_D, _segOn);
-    digitalWrite(_F, _segOn);
+    digitalWrite(_SEG_B, _segOn);
+    digitalWrite(_SEG_D, _segOn);
+    digitalWrite(_SEG_F, _segOn);
   }
 
   if(digit=='X'){
-    digitalWrite(_B, _segOn);
-    digitalWrite(_C, _segOn);
-    digitalWrite(_E, _segOn);
-    digitalWrite(_F, _segOn);
-    digitalWrite(_G, _segOn);
+    digitalWrite(_SEG_B, _segOn);
+    digitalWrite(_SEG_C, _segOn);
+    digitalWrite(_SEG_E, _segOn);
+    digitalWrite(_SEG_F, _segOn);
+    digitalWrite(_SEG_G, _segOn);
   }
 
   if(digit=='Y'){
-    digitalWrite(_B, _segOn);
-    digitalWrite(_C, _segOn);
-    digitalWrite(_D, _segOn);
-    digitalWrite(_F, _segOn);
-    digitalWrite(_G, _segOn);
+    digitalWrite(_SEG_B, _segOn);
+    digitalWrite(_SEG_C, _segOn);
+    digitalWrite(_SEG_D, _segOn);
+    digitalWrite(_SEG_F, _segOn);
+    digitalWrite(_SEG_G, _segOn);
   }
 
   if(digit=='Z'){
-    digitalWrite(_A, _segOn);
-    digitalWrite(_B, _segOn);
-    digitalWrite(_D, _segOn);
-    digitalWrite(_E, _segOn);
-    digitalWrite(_G, _segOn);
+    digitalWrite(_SEG_A, _segOn);
+    digitalWrite(_SEG_B, _segOn);
+    digitalWrite(_SEG_D, _segOn);
+    digitalWrite(_SEG_E, _segOn);
+    digitalWrite(_SEG_G, _segOn);
   }
 }
 
